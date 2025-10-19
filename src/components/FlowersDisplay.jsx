@@ -42,7 +42,7 @@ const FlowersDisplay = ({ onCameraReady }) => {
       }
 
       createGalacticCore() {
-        const coreStarCount = 350;
+        const coreStarCount = 400;
         const coreRadius = 35 * this.scale;
 
         for (let i = 0; i < coreStarCount; i++) {
@@ -94,7 +94,7 @@ const FlowersDisplay = ({ onCameraReady }) => {
 
       createLilyPetals() {
         const petalCount = 24;
-        const starsPerPetal = 150;
+        const starsPerPetal = 180;
 
         for (let petal = 0; petal < petalCount; petal++) {
           for (let i = 0; i < starsPerPetal; i++) {
@@ -234,7 +234,7 @@ const FlowersDisplay = ({ onCameraReady }) => {
       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.2, 3000);
       
       // Set camera position từ trên cao nhìn xuống
-      camera.position.set(50, 750, 450);
+      camera.position.set(50, 450, 350);
       camera.lookAt(0, 0, 0);
       
       cameraRef.current = camera;
@@ -296,6 +296,7 @@ const FlowersDisplay = ({ onCameraReady }) => {
         const newRadius = Math.max(300, Math.min(2000, currentRadius + e.deltaY * 0.5));
         const ratio = newRadius / currentRadius;
         camera.position.multiplyScalar(ratio);
+
       });
 
       controls = { rotation, isDragging };
@@ -310,22 +311,20 @@ const FlowersDisplay = ({ onCameraReady }) => {
 
       // Tạo hoa
       const positions = [];
-      const k = 4000;
+      const k = 1500;
       const spacing = 200;
       const randomOffset = 80;
       const randomHeight = 40;
 
-      for (let i = -2; i <= 2; i++) {
-        for (let j = -2; j <= 2; j++) {
-          if (Math.abs(i) === 2 && Math.abs(j) === 2) continue;
-
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
           const x = i * spacing + (Math.random() - 0.5) * randomOffset * 2;
           const z = j * spacing + (Math.random() - 0.5) * randomOffset * 2;
           const y = -(x * x + z * z) / k + (Math.random() - 0.5) * randomHeight;
-
           positions.push({ x, y, z });
         }
       }
+
 
       positions.forEach((pos) => {
         const coreC = Math.random() < 0.4 ? 'blue' : 'pink';
@@ -361,6 +360,11 @@ const FlowersDisplay = ({ onCameraReady }) => {
         camera.position.y = radius * Math.sin(controls.rotation.x);
         camera.position.z = radius * Math.cos(controls.rotation.y) * Math.cos(controls.rotation.x);
         camera.lookAt(0, 0, 0);
+
+        
+        console.log(
+          `Camera position: x=${camera.position.x.toFixed(2)}, y=${camera.position.y.toFixed(2)}, z=${camera.position.z.toFixed(2)}`
+        );
       }
 
       // Animate flowers
@@ -392,7 +396,61 @@ const FlowersDisplay = ({ onCameraReady }) => {
       renderer.render(scene, camera);
     }
 
+    function createBackgroundStars(scene) {
+      const starCount = 4000; // số sao nền
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(starCount * 3);
+      const colors = new Float32Array(starCount * 3);
+
+      for (let i = 0; i < starCount; i++) {
+        const radius = 2000 * Math.random() + 500; // xa hơn vùng hoa
+        const theta = Math.random() * 2 * Math.PI;
+        const phi = Math.acos(2 * Math.random() - 1);
+
+        const x = radius * Math.sin(phi) * Math.cos(theta);
+        const y = radius * Math.sin(phi) * Math.sin(theta);
+        const z = radius * Math.cos(phi);
+
+        positions[i * 3] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+
+        // ngẫu nhiên màu nhẹ để nền lung linh hơn
+        const baseColor = new THREE.Color(
+          0.8 + Math.random() * 0.2,
+          0.8 + Math.random() * 0.2,
+          1
+        );
+        colors[i * 3] = baseColor.r;
+        colors[i * 3 + 1] = baseColor.g;
+        colors[i * 3 + 2] = baseColor.b;
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: 2.2,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.65,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      });
+
+      const stars = new THREE.Points(geometry, material);
+      scene.add(stars);
+
+      // 👉 lưu hiệu ứng trôi nhẹ của nền
+      const driftSpeed = { x: 0.00005, y: 0.00003 };
+      stars.userData.driftSpeed = driftSpeed;
+
+      return stars;
+    }
+
+
     init();
+    createBackgroundStars(scene);
     animate();
 
     const handleResize = () => {

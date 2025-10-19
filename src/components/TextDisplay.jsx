@@ -59,8 +59,45 @@ const TextDisplay = ({ onCameraReady }) => {
       ];
 
       createText(scene, starGeometries, textStars);
+      createBackgroundStars(scene);
+
       scene.add(new THREE.AmbientLight(0x404040));
     }
+
+    function createBackgroundStars(scene) {
+        const starCount = 3000; // số lượng sao nền
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(starCount * 3);
+
+        for (let i = 0; i < starCount; i++) {
+            const radius = 2000 * Math.random(); // giới hạn khoảng cách
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos((Math.random() * 2) - 1);
+
+            const x = radius * Math.sin(phi) * Math.cos(theta);
+            const y = radius * Math.sin(phi) * Math.sin(theta);
+            const z = radius * Math.cos(phi);
+
+            positions[i * 3] = x;
+            positions[i * 3 + 1] = y;
+            positions[i * 3 + 2] = z;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const material = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 2,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+        });
+
+        const stars = new THREE.Points(geometry, material);
+        scene.add(stars);
+    }
+
 
     function createText(scene, starGeometries, textStars) {
       const canvas = document.createElement('canvas');
