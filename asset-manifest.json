@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/galaxy-flower/static/css/main.f855e6bc.css",
-    "main.js": "/galaxy-flower/static/js/main.0cffc1d9.js",
+    "main.js": "/galaxy-flower/static/js/main.69d4b80e.js",
     "static/js/453.eeb0c73c.chunk.js": "/galaxy-flower/static/js/453.eeb0c73c.chunk.js",
     "index.html": "/galaxy-flower/index.html",
     "main.f855e6bc.css.map": "/galaxy-flower/static/css/main.f855e6bc.css.map",
-    "main.0cffc1d9.js.map": "/galaxy-flower/static/js/main.0cffc1d9.js.map",
+    "main.69d4b80e.js.map": "/galaxy-flower/static/js/main.69d4b80e.js.map",
     "453.eeb0c73c.chunk.js.map": "/galaxy-flower/static/js/453.eeb0c73c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.0cffc1d9.js"
+    "static/js/main.69d4b80e.js"
   ]
 }
