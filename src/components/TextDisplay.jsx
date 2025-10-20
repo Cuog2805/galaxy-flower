@@ -103,9 +103,9 @@ const TextDisplay = ({ onCameraReady }) => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
 
-      const mainFontSize = 300;
+      const mainFontSize = 200;
       const subFontSize = 180;
-      const mainText = 'little gift for bonghoadepnhat';
+      const mainText = 'happy 20/10';
       const subText = 'click here';
 
       ctx.font = `bold ${mainFontSize}px Arial, sans-serif`;
